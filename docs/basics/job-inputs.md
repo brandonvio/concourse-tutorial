@@ -1,5 +1,5 @@
 description: Pass external resources into Concourse job tasks
-image_path: /images/task-docker-image-and-run-tests.png
+image_path: /images/task-registry-image-and-run-tests.png
 
 # Using Resource Inputs in Job Tasks
 
@@ -17,7 +17,7 @@ The task file `task_run_tests.yml` includes:
 
 ```yaml
 image_resource:
-  type: docker-image
+  type: registry-image
   source: {repository: golang, tag: 1.9-alpine}
 
 inputs:
@@ -48,4 +48,4 @@ The `web-app-tests` output below corresponds to the Go language test output (in 
 ok  	github.com/cloudfoundry-community/simple-go-web-app	0.003s
 ```
 
-![task-docker-image-and-run-tests](/images/task-docker-image-and-run-tests.png)
+![task-registry-image-and-run-tests](/images/task-registry-image-and-run-tests.png)

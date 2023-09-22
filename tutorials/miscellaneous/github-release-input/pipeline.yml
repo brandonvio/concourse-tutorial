@@ -9,8 +9,8 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
-            source: {repository: ubuntu}
+            type: registry-image
+            source: { repository: ubuntu }
           inputs:
             - name: github-release-shield
           run:
@@ -20,8 +20,8 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
-            source: {repository: ubuntu}
+            type: registry-image
+            source: { repository: ubuntu }
           inputs:
             - name: github-release-shield
           run:

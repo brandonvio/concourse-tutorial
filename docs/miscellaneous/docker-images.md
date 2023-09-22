@@ -6,12 +6,12 @@ This section will show how to take a Dockerfile project, build it and push to Do
 
 You might have many uses for Docker images in your normal work; but you'll also want to curate Docker images for your Concourse pipelines. Your Concourse tasks will be a lot faster if any dependencies are preinstalled on the base image, rather than you downloading them each time from the Internet. Your team might start curating a set of Docker images to be used by all your pipelines.
 
-At Stark & Wayne we maintain our pipeline's Docker images at https://github.com/starkandwayne/dockerfiles/ and convert them into various Docker images with our pipeline https://ci.starkandwayne.com/teams/main/pipelines/docker-images?groups=*
+At Stark & Wayne we maintain our pipeline's Docker images at https://github.com/starkandwayne/dockerfiles/ and convert them into various Docker images with our pipeline https://ci.starkandwayne.com/teams/main/pipelines/registry-images?groups=*
 
 This lesson's `pipeline.yml` and Dockerfile example are found at:
 
 ```
-cd tutorials/miscellaneous/docker-images
+cd tutorials/miscellaneous/registry-images
 ```
 
 Define a docker image
@@ -33,7 +33,7 @@ Create a docker container image
 
 We could manually create a docker image and push it to Docker Hub. But since we have Concourse we will use it instead.
 
-The purpose of this lesson's `pipeline.yml` is to `put` a `docker-image` resource.
+The purpose of this lesson's `pipeline.yml` is to `put` a `registry-image` resource.
 
 ```yaml
 resources:
@@ -43,8 +43,8 @@ resources:
     uri: https://github.com/drnic/concourse-tutorial.git
     branch: develop
 
-- name: hello-world-docker-image
-  type: docker-image
+- name: hello-world-registry-image
+  type: registry-image
   source:
     email: ((docker-hub-email))
     username: ((docker-hub-username))
@@ -57,9 +57,9 @@ jobs:
   serial: true
   plan:
   - get: tutorial
-  - put: hello-world-docker-image
+  - put: hello-world-registry-image
     params:
-      build: tutorial/tutorials/miscellaneous/docker-images/docker
+      build: tutorial/tutorials/miscellaneous/registry-images/docker
 ```
 
 You can see there are parameters that are required.
@@ -69,9 +69,9 @@ You can see there are parameters that are required.
 If you are using `bucc` then use `credhub` to store them.
 
 ```
-credhub set -n /concourse/main/push-docker-image/docker-hub-email    -t value -v you@email.com
-credhub set -n /concourse/main/push-docker-image/docker-hub-username -t value -v you
-credhub set -n /concourse/main/push-docker-image/docker-hub-password -t value -v yourpassword
+credhub set -n /concourse/main/push-registry-image/docker-hub-email    -t value -v you@email.com
+credhub set -n /concourse/main/push-registry-image/docker-hub-username -t value -v you
+credhub set -n /concourse/main/push-registry-image/docker-hub-password -t value -v yourpassword
 ```
 
 Since your Docker Hub credentials are probably common amongst many pipelines, you can register them within your Concourse `main` team, rather than just the pipeline:
@@ -85,9 +85,9 @@ credhub set -n /concourse/main/docker-hub-password -t value -v yourpassword
 Then setup the pipeline and run the `publish` job:
 
 ```
-fly -t bucc set-pipeline -p push-docker-image -c pipeline.yml -n
-fly -t bucc unpause-pipeline -p push-docker-image
-fly -t bucc trigger-job -j push-docker-image/publish -w
+fly -t bucc set-pipeline -p push-registry-image -c pipeline.yml -n
+fly -t bucc unpause-pipeline -p push-registry-image
+fly -t bucc trigger-job -j push-registry-image/publish -w
 ```
 
 The output will include:
@@ -107,7 +107,7 @@ We can now use the Docker image as the base image for tasks.
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
           repository: ((docker-hub-username))/concourse-tutorial-hello-world
       run:

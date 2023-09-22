@@ -110,13 +110,13 @@ The Docker image being used is described in the `image_resources` section of the
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source: { repository: starkandwayne/concourse }
 ```
 
 The Docker image [`starkandwayne/concourse`](https://hub.docker.com/r/starkandwayne/concourse) is described at https://github.com/starkandwayne/dockerfiles/ and is common base Docker image used by many Stark & Wayne pipelines.
 
-Your organisation may wish to curate its own base Docker images to be shared across pipelines. After finishing the Basics lessons, visit Lesson [Create and Use Docker Images](../miscellaneous/docker-images.md) for creating pipelines to create your own Docker images using Concourse.
+Your organisation may wish to curate its own base Docker images to be shared across pipelines. After finishing the Basics lessons, visit Lesson [Create and Use Docker Images](../miscellaneous/registry-images.md) for creating pipelines to create your own Docker images using Concourse.
 
 ## Tragic Security
 
